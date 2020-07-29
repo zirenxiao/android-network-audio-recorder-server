@@ -8,6 +8,7 @@ public class MainClass {
         
     	c = new Connection(new ProtocolHandler(), 8080);
     	c.start();
+    	new Connection(new EchoHandler(), 8081).start();
     	
 
     }
