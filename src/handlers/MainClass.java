@@ -1,4 +1,5 @@
 package handlers;
+
 import connection.Connection;
 
 public class MainClass {
@@ -6,9 +7,10 @@ public class MainClass {
 	private static Connection c;
     public static void main(String[] args) throws Exception {
         
-    	c = new Connection(new ProtocolHandler(), 8080);
+    	c = new Connection(new ProtocolHandler(), 53330);
     	c.start();
-    	new Connection(new EchoHandler(), 8081).start();
+    	new Connection(new EchoHandler(), 53331).start();
+    	
     	
 
     }

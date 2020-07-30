@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
@@ -20,8 +22,9 @@ import org.slf4j.LoggerFactory;
 public class ProtocolHandler extends IoHandlerAdapter {
     private final static Logger LOGGER = LoggerFactory.getLogger(ProtocolHandler.class);
     
-    File file;
-	DataOutputStream dos;
+    private File file;
+    private DataOutputStream dos;
+    private String fileName;
     
     @Override
     public void sessionCreated(IoSession session) {
@@ -40,13 +43,16 @@ public class ProtocolHandler extends IoHandlerAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        File tmpOutFile = new File("D:/b.wav");
+        File tmpOutFile = new File("c:/audio_data/"+fileName+".wav");
         pcmToWave(file.getAbsolutePath(), tmpOutFile.getAbsolutePath());
     }
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
-    	file = new File("D:/a.pcm");
+    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");  
+ 	    LocalDateTime now = LocalDateTime.now();  
+ 	    fileName = dtf.format(now);
+    	file = new File("c:/audio_data/"+fileName+".pcm");
     	dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
         LOGGER.info("OPENED");
     }
@@ -102,7 +108,7 @@ public class ProtocolHandler extends IoHandlerAdapter {
         long totalAudiolen = 0;
         long longSamplRate = 48000;
         long totalDataLen = totalAudiolen+36;//由于不包括RIFF和WAV
-        int channels = 2;
+        int channels = 1;
         long byteRate = 16*longSamplRate*channels/8;
         byte[] data = new byte[1024];
         try {
